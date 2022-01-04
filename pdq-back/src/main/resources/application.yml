@@ -21,3 +21,8 @@ spring:
       matching-strategy: ant_path_matcher
 server:
   port: 80
+logging:
+  file:
+    name: 运行日志.log
+  pattern:
+    console: '%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}'

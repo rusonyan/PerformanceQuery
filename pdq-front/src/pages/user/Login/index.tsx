@@ -12,47 +12,10 @@ import Footer from '@/components/Footer';
 import styles from './index.less';
 import {getTeacherUsingGET} from "../../../services/swagger/pdqController";
 
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({content}) => (
-  <Alert
-    style={{
-      marginBottom: 24,
-    }}
-    message={content}
-    type="error"
-    showIcon
-  />
-);
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
 
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   // @ts-ignore
-  const {initialState, setInitialState} = useModel('@@initialState');
-
-  const intl = useIntl();
-
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
-      await setInitialState((s) => ({
-        ...s,
-        currentUser: userInfo,
-      }));
-    }
-  };
-
-
-  const {status, type: loginType} = userLoginState;
-
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -93,11 +56,11 @@ const Login: React.FC = () => {
             />
             </Tabs>
 
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage
-            content={"职工号不存在或身份证号错误"}
-            />
-            )}
+          {/*{status === 'error' && loginType === 'account' && (*/}
+          {/*  <LoginMessage*/}
+          {/*  content={"职工号不存在或身份证号错误"}*/}
+          {/*  />*/}
+          {/*  )}*/}
           {type === 'account' && (
             <>
             <ProFormText
@@ -127,7 +90,11 @@ const Login: React.FC = () => {
             required: true,
             message: ("请输入身份证号后六位！"
             ),
-          },
+
+          }, {
+                len:6,
+                message: '请输入身份证号后六位',
+              }
             ]}
             />
             </>

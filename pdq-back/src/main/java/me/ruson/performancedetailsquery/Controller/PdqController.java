@@ -1,6 +1,8 @@
 package me.ruson.performancedetailsquery.Controller;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import me.ruson.performancedetailsquery.AOP.Response.ResultData;
 import me.ruson.performancedetailsquery.Dao.PdqDao;
 import me.ruson.performancedetailsquery.Dao.TeacherDao;
 import me.ruson.performancedetailsquery.Dao.TypeDao;
@@ -17,6 +19,7 @@ import java.util.Map;
 
 @Controller
 @ResponseBody
+@Slf4j
 public class PdqController {
     @Autowired
     TeacherDao teacherDao;
@@ -26,19 +29,21 @@ public class PdqController {
     PdqDao pdqDao;
 
     @GetMapping("/api/teacher")
-    public Teacher getTeacher(@RequestParam String staffCode, @RequestParam String idCard) throws Exception {
+    public ResultData getTeacher(@RequestParam String staffCode, @RequestParam String idCard) throws Exception {
         Teacher teacher= teacherDao.getAllByStaffCodeAndIdCardLike(staffCode,idCard);
         if (teacher==null)
         {
-            throw new Exception("职工号或身份证号错误");
+            log.info(String.format("%s ,%s ",staffCode,idCard));
+            return ResultData.fail("职工号或身份证号错误");
         }
-        return teacher;
+        log.info(String.format("%s ,%s ,%s",staffCode,idCard,teacher.getName()));
+        return ResultData.success(teacher);
     }
 
     @GetMapping("/api/pdq")
     public List<Object[]> getPdq(@RequestParam String staffCode, @RequestParam String idCard)
     {
-       Teacher teacer= teacherDao.getAllByStaffCodeAndIdCardLike(staffCode,idCard);
-       return pdqDao.getPdq(teacer.getId());
+       Teacher teacher= teacherDao.getAllByStaffCodeAndIdCardLike(staffCode,idCard);
+       return pdqDao.getPdq(teacher.getId());
     }
 }
